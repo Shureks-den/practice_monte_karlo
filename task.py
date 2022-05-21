@@ -47,6 +47,7 @@ def calculateNet(L, t, a, randCoefficient, h, taw):
 
 def checkBorders(border: float, L, t, a, randCoefficient, h, taw):
     global netQueue
+    global k
     U = calculateNet(L, t, a, randCoefficient, h, taw)
     netQueue.put(U)
     tau, x = U.shape
@@ -56,7 +57,6 @@ def checkBorders(border: float, L, t, a, randCoefficient, h, taw):
                 # print(U[j][i])
                 return
     mutex.acquire()
-    global k
     k += 1
     mutex.release()
 
@@ -74,7 +74,7 @@ def printOneGraph(queueNet, border, h):
         if i == 1 or i == 2 or i == 5 or i == 10 or i == 20 or i == 50 or i == 100 or i == 200 or i == 500 or i == 1000:
             res = np.array(U.iloc[[i]])
             res = np.concatenate(res)
-            plt.plot(axis, res, label=f't={i * 0.001}')
+            plt.plot(axis, res)
     plt.legend(loc=1)
     plt.xlabel('Значение координаты X')
     plt.ylabel('Значение функции U')
@@ -117,7 +117,7 @@ def startExperiment(iterations, startingBorder, borderStep, desiredProbability, 
     while k/iterations < desiredProbability:
         netQueue.queue.clear()
         k = 0
-        for i in range(0, iterations + 1):
+        for i in range(0, iterations):
             th = Thread(target=checkBorders, args=(
                 border, L, t, a, generateCoefficient(), h, taw))
             threadQueue.append(th)
@@ -132,4 +132,4 @@ def startExperiment(iterations, startingBorder, borderStep, desiredProbability, 
     print(
         f'Граница с вероятностью невыхода {desiredProbability * 100}% {border} \nПотребовалось итераций {borderIterations} со стартовой границы {startingBorder} и шагом в {borderStep}')
     # printOneGraph(netQueue, border, h)
-    printGraph(netQueue, border, h)
+    # printGraph(netQueue, border, h)

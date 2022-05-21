@@ -1,9 +1,9 @@
 from task import startExperiment
 
 # Параметры эксперимента - число опытов, счетчик успешных случаев, граница, необходимая точность
-N = 5
+N = 1000
 k = 0
-border = 1.4
+border = 1.5
 step = 0.05
 desiredProbability = 0.9
 
